@@ -1,0 +1,64 @@
+server {
+    listen      8080;
+    server_name _;
+    server_tokens off;
+
+    root  /usr/share/nginx/html;
+    index index.html;
+
+    # Compression
+    gzip            on;
+    gzip_vary       on;
+    gzip_min_length 1024;
+    gzip_types      text/html text/css application/javascript
+                    application/json image/svg+xml;
+
+    # Sonde de santé : pas de log, pas d'en-tête de sécurité
+    location = /health {
+        access_log  off;
+        add_header  Content-Type text/plain;
+        return 200  "ok";
+    }
+
+    # Relais vers l'API : Angular appelle /icgroup/api/* en même origine, nginx
+    # transmet à ic-api et ajoute lui-même l'en-tête Authorization depuis
+    # ${API_BASIC_AUTH}, substituée au démarrage. Les identifiants ne sont jamais
+    # dans le code Angular.
+    location /icgroup/api/ {
+        proxy_pass         http://ic-api:5000/icgroup/api/;
+        proxy_set_header   Authorization    "Basic ${API_BASIC_AUTH}";
+        proxy_set_header   Host             $host;
+        proxy_set_header   X-Real-IP        $remote_addr;
+        proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+        proxy_read_timeout 10s;
+    }
+
+    # Fichiers statiques : cache immuable d'un an
+    location ~* \.(css|js|png|jpg|jpeg|webp|gif|ico|svg|woff2|woff|ttf)$ {
+        expires 1y;
+        add_header Cache-Control        "public, max-age=31536000, immutable" always;
+        add_header X-Content-Type-Options "nosniff"                           always;
+    }
+
+    # Application Angular : toutes les routes rendent index.html
+    location / {
+        try_files $uri $uri/ /index.html;
+
+        add_header Cache-Control          "no-store, no-cache, must-revalidate"     always;
+        add_header X-Content-Type-Options "nosniff"                                 always;
+        add_header X-Frame-Options        "SAMEORIGIN"                              always;
+        add_header Referrer-Policy        "strict-origin-when-cross-origin"         always;
+        add_header Content-Security-Policy
+            "default-src 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; img-src 'self' data:; font-src 'self' https://fonts.gstatic.com; connect-src 'self'; base-uri 'self'; form-action 'none';"
+            always;
+    }
+
+    # Fichiers cachés interdits
+    location ~ /\. {
+        deny          all;
+        access_log    off;
+        log_not_found off;
+    }
+
+    error_page 404 /index.html;
+}

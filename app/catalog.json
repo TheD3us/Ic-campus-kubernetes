@@ -1,0 +1,71 @@
+{
+  "version": "1.0",
+  "catalog": [
+    {
+      "id": 1,
+      "title": "Docker Fondamentaux",
+      "description": "Maîtrisez la conteneurisation de A à Z : images, conteneurs, réseaux, volumes, registries et sécurité. Le point de départ incontournable de tout ingénieur DevOps moderne.",
+      "duration": "3 jours",
+      "level": "Débutant",
+      "instructor": "Frazer SADO",
+      "price": 1200,
+      "category": "DevOps",
+      "topics": ["Dockerfile", "docker-compose", "Registry", "Trivy", "Multi-stage builds", "Volumes"]
+    },
+    {
+      "id": 2,
+      "title": "Kubernetes Opérationnel",
+      "description": "Déployez, scalez et sécurisez des workloads critiques en production sur Kubernetes. Helm, NetworkPolicies, RBAC, HPA et observabilité complète avec Prometheus/Grafana.",
+      "duration": "5 jours",
+      "level": "Avancé",
+      "instructor": "Frazer SADO",
+      "price": 2500,
+      "category": "Cloud Native",
+      "topics": ["K8s", "Helm", "RBAC", "NetworkPolicy", "HPA", "Prometheus", "Grafana"]
+    },
+    {
+      "id": 3,
+      "title": "Ansible & Infrastructure as Code",
+      "description": "Automatisez le provisioning et la configuration de votre infrastructure avec Ansible. Rôles, Vault, idempotence, ansible-lint et intégration CI/CD.",
+      "duration": "2 jours",
+      "level": "Intermédiaire",
+      "instructor": "Frazer SADO",
+      "price": 900,
+      "category": "Automatisation",
+      "topics": ["Playbooks", "Rôles", "Vault", "Handlers", "ansible-lint", "Idempotence"]
+    },
+    {
+      "id": 4,
+      "title": "Terraform & Cloud Infrastructure",
+      "description": "Provisionnez votre cloud (AWS, Azure, Hetzner) entièrement en code. State management, modules réutilisables, sécurité et pipeline CI/CD Terraform avec checkov et tfsec.",
+      "duration": "3 jours",
+      "level": "Intermédiaire",
+      "instructor": "Frazer SADO",
+      "price": 1400,
+      "category": "Cloud",
+      "topics": ["HCL", "State", "Modules", "Remote backend", "checkov", "tfsec", "Workspaces"]
+    },
+    {
+      "id": 5,
+      "title": "CI/CD avec Jenkins & GitLab",
+      "description": "Construisez des pipelines CI/CD robustes du commit au déploiement production. Gates qualité, SAST, artefacts versionnés et rollback automatisé.",
+      "duration": "2 jours",
+      "level": "Intermédiaire",
+      "instructor": "Frazer SADO",
+      "price": 800,
+      "category": "DevOps",
+      "topics": ["Jenkinsfile", "GitLab CI", "Stages", "Artifacts", "SAST", "Gates", "Rollback"]
+    },
+    {
+      "id": 6,
+      "title": "DevSecOps & Sécurité Conteneurs",
+      "description": "Intégrez la sécurité dans chaque étape de votre SDLC. Scan d'images, gestion des secrets, SBOM, signature d'images avec cosign et réponse aux incidents.",
+      "duration": "4 jours",
+      "level": "Avancé",
+      "instructor": "Frazer SADO",
+      "price": 2000,
+      "category": "Sécurité",
+      "topics": ["Trivy", "gitleaks", "OPA", "Falco", "Vault", "SBOM", "cosign", "Incident response"]
+    }
+  ]
+}

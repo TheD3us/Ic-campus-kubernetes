@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
@@ -216,3 +217,22 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+=======
+# Les valeurs sensibles vivent dans l'environnement du poste qui déploie, jamais dans un fichier.
+# Si vous les gardez dans un fichier d'environnement local, il reste hors du dépôt.
+.env
+.env.*
+
+# Sorties de travail
+*.tar
+*.tar.gz
+*.kubeconfig
+kubeconfig*
+
+# Système et éditeurs
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+>>>>>>> f8e59d7 (debut)

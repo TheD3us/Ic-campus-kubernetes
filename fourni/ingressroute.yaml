@@ -1,0 +1,20 @@
+# Route d'entrée Traefik — fournie, mais PAS déployable telle quelle.
+# Copiez ce fichier dans manifests/, relisez chaque champ avec le § 11.1 du README,
+# corrigez ce qui est faux, complétez ce qui manque, puis raccordez le Middleware fourni.
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ic-campus
+  labels:
+    app.kubernetes.io/name: ic-web
+    app.kubernetes.io/part-of: ic-campus
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`ic-campus.lab.ic-techdojo.com`) && PathPrefix(`/`)
+      services:
+        - name: ic-portail
+          port: 8080
+  tls: {}

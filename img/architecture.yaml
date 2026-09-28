@@ -1,0 +1,272 @@
+titre: IC-Campus sur Kubernetes — l'architecture cible
+sous_titre: 'Trois étages, trois responsabilités : le portail sert et relaie, l''API seule lit le catalogue et détient les identifiants, le stockage seul survit à un conteneur.'
+description: 'Architecture cible : Internet arrive sur Traefik, qui applique le Middleware d''en-têtes et route par IngressRoute vers ic-web (portail Angular servi par nginx, deux instances), qui relaie
+  /icgroup/api/ vers ic-api (API Flask servie par gunicorn), qui lit le catalogue sur un stockage durable sauvegardé par une tâche planifiée vers un stockage d''archives ; la configuration et les valeurs
+  sensibles sont injectées à l''exécution ; les images viennent du registre privé GitLab.'
+elements:
+- type: boite
+  id: internet
+  x: 40
+  y: 0
+  w: 300
+  h: 90
+  icone: internet
+  titre: Internet
+  texte: le navigateur, en HTTPS
+  couleur: cyan
+  style: teinte
+  taille_titre: 20
+  taille_texte: 16
+- type: boite
+  id: registre
+  x: 820
+  y: 0
+  w: 340
+  h: 90
+  icone: registre
+  titre: Registre privé GitLab
+  texte: '`ic-campus-api` et `ic-campus-web`, construites en M2'
+  couleur: violet
+  style: teinte
+  taille_titre: 20
+  taille_texte: 15
+- type: groupe
+  id: cluster
+  x: 40
+  y: 150
+  w: 1120
+  h: 700
+  titre: Le cluster — votre namespace
+  icone: cluster
+  couleur: navy
+  style: panneau
+  tirets: false
+  position: droite
+- type: boite
+  id: traefik
+  x: 70
+  y: 190
+  w: 500
+  h: 104
+  icone: bouclier
+  titre: Traefik
+  texte: 'le contrôleur d''entrée du cluster : termine le HTTPS et applique le Middleware avant de router'
+  couleur: cyan
+  style: contour
+  taille_titre: 20
+  taille_texte: 16
+- type: boite
+  id: middleware
+  x: 670
+  y: 190
+  w: 460
+  h: 104
+  icone: bouclier
+  titre: Middleware `ic-campus-entetes`
+  texte: 'fourni : CSP, HSTS, nosniff… Il ne s''applique qu''une fois raccordé à la route'
+  couleur: orange
+  style: contour
+  taille_titre: 18
+  taille_texte: 16
+- type: boite
+  id: route
+  x: 70
+  y: 340
+  w: 500
+  h: 92
+  icone: reseau
+  titre: IngressRoute — hôte + chemin
+  texte: '`ic-campus-<namespace>.lab.ic-techdojo.com`, tous chemins → le portail, par son nom'
+  couleur: cyan
+  style: contour
+  taille_titre: 18
+  taille_texte: 15
+- type: boite
+  id: config
+  x: 670
+  y: 340
+  w: 220
+  h: 92
+  icone: feuille
+  titre: Configuration
+  texte: ordinaire, hors de l'image
+  couleur: orange
+  style: teinte
+  taille_titre: 18
+  taille_texte: 15
+- type: boite
+  id: sensible
+  x: 910
+  y: 340
+  w: 220
+  h: 92
+  icone: secret
+  titre: Sensible
+  texte: jamais dans un fichier versionné
+  couleur: coral
+  style: teinte
+  taille_titre: 18
+  taille_texte: 15
+- type: boite
+  id: web
+  x: 70
+  y: 480
+  w: 500
+  h: 176
+  icone: navigateur
+  titre: '`ic-web` — nom stable, port 80'
+  texte: 'portail Angular servi par nginx, **× 2 instances**
+
+    racine du conteneur en lecture seule
+
+    relaie `/icgroup/api/` vers `http://ic-api:5000`
+
+    et y ajoute l''en-tête d''authentification'
+  couleur: blue
+  style: contour
+  taille_titre: 19
+  taille_texte: 16
+- type: boite
+  id: api
+  x: 670
+  y: 480
+  w: 460
+  h: 176
+  icone: cube
+  titre: '`ic-api` — nom stable, port 5000'
+  texte: 'API Python/Flask servie par gunicorn
+
+    configuration et identifiants reçus à l''exécution
+
+    seul étage qui lit le catalogue'
+  couleur: green
+  style: contour
+  taille_titre: 19
+  taille_texte: 16
+- type: boite
+  id: stockage
+  x: 70
+  y: 720
+  w: 310
+  h: 110
+  icone: volume
+  titre: Stockage durable
+  texte: le catalogue, qui survit à la disparition d'un conteneur
+  couleur: violet
+  style: teinte
+  taille_titre: 19
+  taille_texte: 15
+- type: boite
+  id: tache
+  x: 440
+  y: 720
+  w: 310
+  h: 110
+  icone: horloge
+  titre: 'Tâche planifiée : archive'
+  texte: à heure fixe ; la restauration se rejoue depuis l'archive
+  couleur: orange
+  style: teinte
+  taille_titre: 19
+  taille_texte: 15
+- type: boite
+  id: archives
+  x: 810
+  y: 720
+  w: 320
+  h: 110
+  icone: sauvegarde
+  titre: Stockage des archives
+  texte: 'distinct du catalogue : une panne de l''un ne perd pas l''autre'
+  couleur: violet
+  style: teinte
+  taille_titre: 19
+  taille_texte: 15
+- type: fleche
+  de: internet
+  a: traefik
+  de_cote: bas
+  a_cote: haut
+  de_dx: 0
+  a_dx: -130
+  label: HTTPS
+  couleur: cyan
+  derriere: true
+- type: fleche
+  de: registre
+  a: 760,150
+  de_cote: bas
+  label: les nœuds tirent les images
+  couleur: violet
+  derriere: true
+  trace: coude
+  milieu: 0.5
+  label_y: 118
+- type: fleche
+  de: middleware
+  a: traefik
+  label: raccordé
+  style: tirets
+  couleur: orange
+  ecart: 0
+  derriere: true
+- type: fleche
+  de: traefik
+  a: route
+  label: route
+  couleur: cyan
+  derriere: true
+- type: fleche
+  de: route
+  a: web
+  label: le portail, par son nom
+  couleur: cyan
+  derriere: true
+- type: fleche
+  de: web
+  a: api
+  label: relaie
+  couleur: blue
+  ecart: 0
+  derriere: true
+- type: fleche
+  de: config
+  a: api
+  de_cote: bas
+  a_cote: haut
+  a_dx: -120
+  couleur: orange
+  derriere: true
+- type: fleche
+  de: sensible
+  a: api
+  de_cote: bas
+  a_cote: haut
+  a_dx: 120
+  label: injectées à l'exécution
+  label_y: 456
+  couleur: coral
+  derriere: true
+- type: fleche
+  de: api
+  a: stockage
+  de_cote: bas
+  a_cote: haut
+  de_dx: -140
+  trace: coude
+  milieu: 0.5
+  label: lit et écrit le catalogue
+  couleur: violet
+  derriere: true
+- type: fleche
+  de: stockage
+  a: tache
+  couleur: orange
+  ecart: 0
+  derriere: true
+- type: fleche
+  de: tache
+  a: archives
+  couleur: orange
+  ecart: 0
+  derriere: true
